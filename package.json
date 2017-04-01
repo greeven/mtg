@@ -19,7 +19,8 @@
     "vue-router": "^2.2.0",
 
     "ora": "^1.1.0",
-    "webpack": "^2.2.1"
+    "webpack": "^2.2.1",
+    "webpack-merge": "^2.6.1"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",
@@ -82,8 +83,8 @@
     "vue-template-compiler": "^2.2.4",
     
     "webpack-dev-middleware": "^1.10.0",
-    "webpack-hot-middleware": "^2.16.1",
-    "webpack-merge": "^2.6.1"
+    "webpack-hot-middleware": "^2.16.1"
+    
   },
   "engines": {
     "node": ">= 4.0.0",
