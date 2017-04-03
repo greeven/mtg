@@ -1,23 +1,46 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <router-view></router-view>
+    <!-- <img src="./assets/logo.png"> -->
+
+
+    <b-navbar toggleable type="inverse" variant="inverse">
+
+      <b-nav-toggle target="nav_collapse"></b-nav-toggle>
+
+      <b-link class="navbar-brand" to="#">
+        <img src="/static/favicon.ico" width="30" height="30" class="d-inline-block align-top" alt="">
+        <span>Magic The Gathering</span>
+      </b-link>
+
+      <b-collapse is-nav id="nav_collapse">
+
+        <b-nav is-nav-bar class="ml-auto">
+
+          <b-nav-item>Feedback</b-nav-item>
+          <!-- <b-nav-item>Docs</b-nav-item> -->
+          <b-nav-item><a class ="text-danger" href ="http://gatherer.wizards.com/Pages/Default.aspx" target ="_blank">Official Search <i class ="fa fa-location-arrow"></i></a></b-nav-item>
+
+        </b-nav>
+      </b-collapse>
+    </b-navbar>
+
+    <router-view class ="container"></router-view>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'app'
-}
+
+  // import { navbar, dropdown } from 'vue-strap'
+
+  export default {
+    name: 'app'
+  }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
+  body{
+    overflow-y: scroll;
+  }
+
 </style>

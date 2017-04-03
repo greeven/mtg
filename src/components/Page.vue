@@ -1,54 +1,141 @@
 <template>
   <div class="page">
-    <h1>Magic The Gathering</h1>
-    
-    <div>
-      <h2>Copy your card Titles</h2>
+    <div class ="row justify-content-center" style="margin-top: 3em;">
 
-      <textarea v-model="textareaValue"></textarea>
-      <button v-on:click="fetch">Add</button>
+      <div class ="col-6">
+        <p class ="text-center">
+          Copy your list of cards.
+        </p>
+        <strong>Examples</strong>
+        <ul class ="">
+          <li v-for="dd in defaultDecks">
+            <a href ="#" class ="" @click="addDeck(dd)">{{dd.name}} <small>({{dd.cards.length}})</small></a>
+          </li>
+        </ul>
+        <div class ="d-flex justify-content-center">
+          <textarea class="form-control" v-model="cardList" @input="checkListButton" placeholder="Liste von Karten.."></textarea>
+        </div>
+
+        <div class ="d-flex justify-content-center">
+          <b-button class ="btn-primary m-t" @click="fetch">{{listText}}</b-button>
+        </div>
+      </div>
     </div>
 
-    <div>
+    <div class ="row m-t-xl"><div class ="col-12"><hr></div></div>
 
-      <h2>Your Cards</h2>
+    <div class ="row">
+      <magic-card v-for="(card, i) in cards" :card="card" :key="i" class ="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3"></magic-card>
+    </div>
+
+    <div class ="row  justify-content-md-center" v-if="cards.length == 0">
+      <div class ="col-4" >
+        <b-alert class ="d-flex justify-content-center" variant="info" show>
+          Keine Karten zum Anzeigen.
+        </b-alert>
+      </div>
+    </div>
+
+    <div class ="row" v-if="notFound.length > 0">
+      <h3>Nicht gefunden</h3>
       <ul>
-        <li v-for="item in items">
-          <img :src="item.imageUrl">
-          <b>
-            {{ item.name }}
-          </b>
-        </li>
+        <li v-for="nocard in notFound">{{nocard}}</li>
       </ul>
     </div>
-
   </div>
 </template>
 
 <script>
 
   import Mtg from 'mtgsdk'
+  import autosize from 'autosize'
+  import MagicCard from '@/components/MagicCard'
+
+  const defaultDecks = [];
+
+  defaultDecks.push({
+    name: 'Wurmdeck',
+    cards: ['Hund', 'Katze', 'Maus']
+  })
+
+  defaultDecks.push({
+    name: 'Anderes Deck',
+    cards: ['Eins', 'Heilbalsam', 'Wurm', 'Insel', 'Ebene', 'Wüste']
+  })
 
   export default {
     name: 'page',
     data () {
       return {
-        msg: 'Welcome to Your Vue.js App',
-        textareaValue: '',
-        items: []
+        listText: 'Karten auflisten',
+        cardList: '',
+        defaultDecks: defaultDecks,
+        cards: [],
+        notFound: []
       }
     },
+    components: {MagicCard},
+    mounted: function(){
+      console.log('Mounted.')
+      autosize(document.querySelector('textarea'))
+    },
     methods: {
+
+      checkListButton: function(){
+        this.listText= 'Karten auflisten'
+
+
+      },
+
+      addDeck: function(deck){
+        this.cardList = deck.cards.join("\n")
+        this.listText = 'Karten von "' + deck.name + '" auflisten'
+
+        this.$nextTick(function(){autosize.update(document.querySelector('textarea'))})
+      },
+
       fetch: function (event) {
-        this.items = []
-        this.textareaValue.split('\n').forEach((obj, i) => {
-          Mtg.card.all({language: 'german', name: obj})
-          .on('data', card => {
-            this.items.push(card)
-            if (this.items.length > 5) Mtg.end()
-            console.log(card)
+        event.target.disabled = true
+
+        this.cards = []
+        this.notFound = []
+
+        this.cardList.split('\n').forEach((obj, i) => {
+
+          Mtg.card.where({language: 'german', name: obj})
+          .then( card => {
+            if(card.length == 0){
+              this.notFound.push(obj)
+            } 
+            else if(card.length > 1){
+
+              console.log('Für "' + obj + '" wurden ' + card.length + ' Ergebnisse gefunden.')
+              let imageFound = false
+
+              card.some( (obj, i) => {
+                if(obj.imageUrl){
+                  console.log('Image gefunden.');
+                  imageFound = true;
+                  obj.multiple = true;
+                  this.cards.unshift(obj);
+                  return true; /* auskommentiert zeigt es auch die anderen */
+                }
+              })
+
+              if(!imageFound){ 
+                card[0].multiple = true
+                this.cards.unshift(card[0])
+              }
+            }
+            this.log(card)
           })
         })
+
+        event.target.disabled = false
+      },
+
+      log: function (card) {
+        console.log(JSON.parse(JSON.stringify(card)));
       }
     }
   }
@@ -56,21 +143,11 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  h1, h2 {
-    font-weight: normal;
+  .m-t{
+    margin-top: 15px;
   }
 
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-
-  li {
-    /*display: inline-block;*/
-    margin: 5px 10px;
-  }
-
-  a {
-    color: #42b983;
+  .m-t-xl{
+    margin-top: 30px;
   }
 </style>
