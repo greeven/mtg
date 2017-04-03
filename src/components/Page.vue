@@ -13,11 +13,11 @@
           </li>
         </ul>
         <div class ="d-flex justify-content-center">
-          <textarea class="form-control" v-model="cardList" @input="checkListButton" placeholder="Liste von Karten.."></textarea>
+          <textarea class="form-control" v-model="cardList" @input="checkListButton" placeholder="A list of cards.."></textarea>
         </div>
 
         <div class ="d-flex justify-content-center">
-          <b-button class ="btn-primary m-t" @click="fetch">{{listText}}</b-button>
+          <b-button class ="m-t" @click="fetch" :variant="'primary'">{{listText}}</b-button>
         </div>
       </div>
     </div>
@@ -55,7 +55,7 @@
 
   defaultDecks.push({
     name: 'Wurmdeck',
-    cards: ['Hund', 'Katze', 'Maus']
+    cards: ['Quirionelfen', 'Feuerball', 'Kaerveks Fackel', 'Quirionelfen', 'halbschatten-Wurm', 'Wurzelbrechender Wurm', 'Argothischer Wurm', 'Wurzelmauer', 'Quirionelfen', 'Llanowarelfen', 'Blutaugenzyklop', 'Ghitufeuer', 'Avatar des Zorns', 'Alter Silberrücken', 'hammer von Bogardan', 'Pyrotechnik', 'Schüren des Feuers', 'Feuerball', 'Wurzelmauer', 'Titanias Priesterin', 'Quirionelfen', 'Kaerveks Fackel', 'Rollender Donner', 'Todesschlingenwurm', 'Shivan Wurm', 'Sumpf', 'Sumpf', 'Sumpf']
   })
 
   defaultDecks.push({
@@ -67,7 +67,7 @@
     name: 'page',
     data () {
       return {
-        listText: 'Karten auflisten',
+        listText: 'List Cards',
         cardList: '',
         defaultDecks: defaultDecks,
         cards: [],
@@ -82,14 +82,14 @@
     methods: {
 
       checkListButton: function(){
-        this.listText= 'Karten auflisten'
+        this.listText= 'List Cards'
 
 
       },
 
       addDeck: function(deck){
         this.cardList = deck.cards.join("\n")
-        this.listText = 'Karten von "' + deck.name + '" auflisten'
+        this.listText = 'List Cards from ' + deck.name
 
         this.$nextTick(function(){autosize.update(document.querySelector('textarea'))})
       },
@@ -126,6 +126,8 @@
                 card[0].multiple = true
                 this.cards.unshift(card[0])
               }
+            }else{
+              this.cards.unshift(card[0])
             }
             this.log(card)
           })

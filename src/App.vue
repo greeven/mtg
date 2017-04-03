@@ -16,7 +16,7 @@
 
         <b-nav is-nav-bar class="ml-auto">
 
-          <b-nav-item>Feedback</b-nav-item>
+          <b-nav-item><a href="#" class ="text-warning" onclick="_urq.push(['Feedback_Open'])">Feedback</a></b-nav-item>
           <!-- <b-nav-item>Docs</b-nav-item> -->
           <b-nav-item><a class ="text-danger" href ="http://gatherer.wizards.com/Pages/Default.aspx" target ="_blank">Official Search <i class ="fa fa-location-arrow"></i></a></b-nav-item>
 
