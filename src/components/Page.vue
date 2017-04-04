@@ -1,12 +1,12 @@
 <template>
   <div class="page">
-    <div class ="row justify-content-center" style="margin-top: 3em;">
+    <div class ="row justify-content-center" style="margin-top: 5em;">
 
       <div class ="col-6">
         <p class ="text-center">
-          Copy your list of cards.
+          {{$t("text.heading")}}
         </p>
-        <strong>Examples</strong>
+        <strong>{{$t('examples')}}</strong>
         <ul class ="">
           <li v-for="dd in defaultDecks">
             <a href ="#" class ="" @click="addDeck(dd)">{{dd.name}} <small>({{dd.cards.length}})</small></a>
@@ -17,7 +17,8 @@
         </div>
 
         <div class ="d-flex justify-content-center">
-          <b-button class ="m-t" @click="fetch" :variant="'primary'">{{listText}}</b-button>
+          <!-- <b-button class ="m-t" @click="fetch" :variant="'primary'" :disabled="listButton.disabled" disabled="disabled">{{listText}}</b-button> -->
+          <button class ="m-t btn btn-primary" :class="listButton.disabledClass" @click="fetch" :disabled="listButton.disabled">{{listText}}</button>
         </div>
       </div>
     </div>
@@ -25,7 +26,7 @@
     <div class ="row m-t-xl"><div class ="col-12"><hr></div></div>
 
     <div class ="row">
-      <magic-card v-for="(card, i) in cards" :card="card" :key="i" class ="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3"></magic-card>
+      <magic-card ref="card" v-for="(card, i) in cards" :card="card" :key="i" class ="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3"></magic-card>
     </div>
 
     <div class ="row  justify-content-md-center" v-if="cards.length == 0">
@@ -63,11 +64,21 @@
     cards: ['Eins', 'Heilbalsam', 'Wurm', 'Insel', 'Ebene', 'Wüste']
   })
 
+  defaultDecks.push({
+    name: 'Kleines Deck',
+    cards: ['Titanias Priesterin']
+  })
+
   export default {
     name: 'page',
     data () {
       return {
         listText: 'List Cards',
+        listButton: {
+          disabled: false,
+          disabledClass: '',
+          variant: 'primary'
+        },
         cardList: '',
         defaultDecks: defaultDecks,
         cards: [],
@@ -76,15 +87,13 @@
     },
     components: {MagicCard},
     mounted: function(){
-      console.log('Mounted.')
+      console.log('Page.vue mounted.')
       autosize(document.querySelector('textarea'))
     },
     methods: {
 
       checkListButton: function(){
         this.listText= 'List Cards'
-
-
       },
 
       addDeck: function(deck){
@@ -95,12 +104,20 @@
       },
 
       fetch: function (event) {
-        event.target.disabled = true
+        // event.target.disabled = true
+        this.listButton.disabled = true
+        this.listButton.disabledClass = 'disabled'
+
+        // return true
 
         this.cards = []
         this.notFound = []
 
-        this.cardList.split('\n').forEach((obj, i) => {
+        let Splitted = this.cardList.split('\n')
+
+        // console.log('Splitted.length', Splitted.length)
+
+        Splitted.forEach((obj, i) => {
 
           Mtg.card.where({language: 'german', name: obj})
           .then( card => {
@@ -112,11 +129,12 @@
               console.log('Für "' + obj + '" wurden ' + card.length + ' Ergebnisse gefunden.')
               let imageFound = false
 
-              card.some( (obj, i) => {
+              card.some( (obj, j) => {
                 if(obj.imageUrl){
-                  console.log('Image gefunden.');
+                  // console.log('Image gefunden.');
                   imageFound = true;
                   obj.multiple = true;
+                  obj.image = obj.imageUrl;
                   this.cards.unshift(obj);
                   return true; /* auskommentiert zeigt es auch die anderen */
                 }
@@ -124,17 +142,26 @@
 
               if(!imageFound){ 
                 card[0].multiple = true
+                card[0].image = 'static/default-back.jpg'
                 this.cards.unshift(card[0])
               }
             }else{
+              card[0].image = card[0].imageUrl;
               this.cards.unshift(card[0])
             }
-            this.log(card)
+            //this.log(card)
+
+            if( i + 1 == Splitted.length){
+              // console.log('Enable Button')
+              // event.target.disabled = false
+              this.listButton.disabled = false
+              this.listButton.disabledClass = ''
+            }
           })
+          
         })
 
-        event.target.disabled = false
-      },
+      },    
 
       log: function (card) {
         console.log(JSON.parse(JSON.stringify(card)));
