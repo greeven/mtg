@@ -6,9 +6,13 @@ export default {
 	foreignName: 'German',
 	examples: 'Beispiele',
 	text: {
-		heading: 'Kopiere deine Kartenliste.'
+		heading: 'Kopiere deine Kartenliste.',
+		button: 'Karten auflisten',
+		textarea: 'Kartenliste..'
 	},
 	card: {
-		multiple: 'Mehrmals gefunden.'
+		multiple: 'Mehrmals gefunden.',
+		notfound: 'Nicht gefunden',
+		nocards: 'Noch keine Karten gelistet.'
 	}
 }

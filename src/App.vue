@@ -50,7 +50,7 @@
     methods: {
 
       setLanguage: function(key){
-        console.log('Setze Sprache auf ' + this.$t('language', key) + ' (' + key + ') bei ...')
+        // console.log('Setze Sprache auf ' + this.$t('language', key) + ' (' + key + ') bei ...')
         Vue.config.lang = key
         this.$root.$emit('shown::dropdown', this);
 

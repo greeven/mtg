@@ -9,7 +9,7 @@ import languages from './lang/languages'
 
 Vue.use(VueI18n)
 
-Vue.config.lang = 'de'
+Vue.config.lang = 'en'
 Vue.config.fallbackLang = 'en'
 Object.keys(languages).forEach(function (lang) {
 	Vue.locale(lang, languages[lang])

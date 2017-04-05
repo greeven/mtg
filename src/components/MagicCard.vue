@@ -1,20 +1,26 @@
 <template>
-  <div class="magic-card m-b text-center" :title ="card.name + (card.multiple ? ' (' + $t('card.multiple') + ')' : '')">
-    <div class ="">
+  <transition name="list">
+    <article class="magic-card m-b text-center caption">
+
       <!-- <img class ="" :src="card.imageUrl ? card.imageUrl : defaultUrl" alt="Image of the Card."> -->
-      <img class ="" :src="card.image" alt="Image of the Card.">
+      <img class="caption__media" :src="card.image" alt="Image of the Card.">
 
-      <!-- <b-tooltip v-if="card.multiple" content="Mehrere Suchergebnisse gefunden!">
-        <i class ="fa fa-exclamation-triangle fa-3x text-danger"></i>
-      </b-tooltip> -->
 
-      <!-- <div class="card-block">
-        <h4 class="card-title">{{card.name}}</h4>
-        <p class="card-text">{{card.text}}</p>
-        <a href="#" class="btn btn-primary btn-block btn-xs">{{card.setName}}</a>
-      </div> -->
-    </div>
-  </div>
+      <div class="caption__overlay">
+        <!-- <h1 class="caption__overlay__title">Caption title</h1> -->
+        <p class="caption__overlay__content">
+          <strong>{{card.number}}</strong>
+          <br>
+          {{card.rarity}}
+        </p>
+        <p class="caption__overlay__content d-flex align-items-end" style="padding: 0px 20px;">
+          <em>
+            {{card.flavor}}
+          </em>
+        </p>
+      </div>
+    </article>
+  </transition>
 </template>
 
 <script>
@@ -37,9 +43,12 @@
 
       bus.$on('switch', this.switch)
     },
+    computed: {
+
+    },
     methods: {
       switch: function(language){
-        console.log('... ' + this.card.name)
+        // console.log(this.card.name, this.log(this.card))
 
         if(language == 'default'){
           this.card.image = this.card.imageUrl
@@ -57,6 +66,11 @@
       log: function (card) {
         console.log(JSON.parse(JSON.stringify(card)));
       }
+    },
+    destroyed(){
+      // console.log(this.card.name + ' ist gestorben.')
+
+      bus.$off('switch')
     }
   }
 </script>
@@ -74,5 +88,78 @@
     left: 0;
     right: 0;
     bottom: 15px;
+  }
+
+  /*
+  | Quelle für die Overlays
+  | http://maketea.co.uk/2013/12/16/smooth-text-overlays-with-css-transforms.html
+  */
+  .caption {
+    position: relative;
+    overflow: hidden;
+
+    transform: translateZ(0);
+  }
+  .caption__media {
+    display: block;
+    min-width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
+  .caption__overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 10px;
+    color: white;
+    transform: translateY(100%);
+    transition: transform .35s ease-out;
+  }
+  .caption:hover .caption__overlay {
+    transform: translateY(0);
+  }
+
+  .caption__overlay__title {
+    margin: 0;
+    padding: 0 0 12px;
+    transform: translateY( calc(-100% - 10px) ); /* +10px overlay padding */
+    transition: transform .35s ease-out;
+  }
+  .caption:hover .caption__overlay__title {
+    transform: translateY(0);
+  }
+
+  .caption::before {
+    content: ' ';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: 0px 15px;
+    border-radius: 6px;
+    background: transparent;
+    transition: background .35s ease-out;
+  }
+  .caption:hover::before {
+    background: rgba(0, 0, 0, .5);
+  }
+
+
+  /*
+  | Transitions via vue.js
+  */
+  .list-item {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  .list-enter-active, .list-leave-active {
+    transition: all 1s;
+  }
+  .list-enter, .list-leave-to /* .list-leave-active for <2.1.8 */ {
+    opacity: 0;
+    transform: translateY(30px);
   }
 </style>
