@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <!-- <img src="./assets/logo.png"> -->
+    <!-- <img src="./assets/logo.png"> aadfsdf-->
 
 
     <b-navbar toggleable type="inverse" variant="inverse" fixed="top">
