@@ -3,7 +3,7 @@
     <div class ="row justify-content-center" style="margin-top: 5em;">
 
 
-      <div class ="col-6">
+      <div class ="col-12 col-md-6">
         <p class ="text-center">
           {{$t("text.heading")}}
         </p>
@@ -40,7 +40,7 @@
     </div>
 
     <div class ="row  justify-content-md-center" v-if="cards.length == 0">
-      <div class ="col-4">
+      <div class ="col-12 col-md-4">
         <b-alert class ="d-flex justify-content-center" variant="warning" show>
           {{$t('card.nocards')}}
         </b-alert>
