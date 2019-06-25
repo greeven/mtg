@@ -3,7 +3,7 @@
     <!-- <img src="./assets/logo.png"> aadfsdf-->
 
 
-    <b-navbar toggleable type="inverse" variant="inverse" fixed="top">
+      <b-navbar toggleable type="dark" variant="dark" fixed="top">
 
       <b-nav-toggle target="nav_collapse"></b-nav-toggle>
 
